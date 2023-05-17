@@ -20,7 +20,6 @@ from net.HistoryLine import StartKlineLoad
 from net.Balance import Balance
 from net.Rsi import Rsi
 import threading
-import auth
 
 
 class Widget(QWidget):
