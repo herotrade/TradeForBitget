@@ -1,0 +1,867 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget</class>
+ <widget class="QWidget" name="Widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1185</width>
+    <height>725</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QWidget" name="widget_2" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>885</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(199, 255, 242);</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="canvas" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(100, 100, 100);</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QWidget" name="kline" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>500</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color:rgb(255, 255, 255)</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="widget_4" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>10</number>
+               </property>
+               <property name="topMargin">
+                <number>10</number>
+               </property>
+               <property name="rightMargin">
+                <number>10</number>
+               </property>
+               <property name="bottomMargin">
+                <number>10</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="label">
+                 <property name="styleSheet">
+                  <string notr="true">color: #ddd;</string>
+                 </property>
+                 <property name="text">
+                  <string>2023-03-25 13:25:11</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_3">
+                 <property name="minimumSize">
+                  <size>
+                   <width>150</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: #ddd;</string>
+                 </property>
+                 <property name="text">
+                  <string>24H最高：</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_4">
+                 <property name="minimumSize">
+                  <size>
+                   <width>150</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: #ddd;</string>
+                 </property>
+                 <property name="text">
+                  <string>24H最低：</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_5">
+                 <property name="minimumSize">
+                  <size>
+                   <width>150</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: #ddd;</string>
+                 </property>
+                 <property name="text">
+                  <string>最新：</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_6">
+                 <property name="styleSheet">
+                  <string notr="true">color: #ddd;</string>
+                 </property>
+                 <property name="text">
+                  <string>RSI：</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_7">
+                 <property name="styleSheet">
+                  <string notr="true">color: #ddd;</string>
+                 </property>
+                 <property name="text">
+                  <string>BTC / USDT</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="orders" native="true">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QTextEdit" name="siginList">
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(171, 171, 171);
+text-align:center;
+padding:20px;
+font-size:16px</string>
+              </property>
+              <property name="documentTitle">
+               <string>信号栏</string>
+              </property>
+              <property name="lineWrapMode">
+               <enum>QTextEdit::WidgetWidth</enum>
+              </property>
+              <property name="html">
+               <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;信号栏&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:16px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont'; font-size:18pt;&quot;&gt;日志信息：&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="tools" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(100, 100, 100)</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="widget_5" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>87</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>100</height>
+            </size>
+           </property>
+           <widget class="QLabel" name="label_8">
+            <property name="geometry">
+             <rect>
+              <x>25</x>
+              <y>20</y>
+              <width>58</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);
+font-size:14px</string>
+            </property>
+            <property name="text">
+             <string>交易对</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_9">
+            <property name="geometry">
+             <rect>
+              <x>123</x>
+              <y>20</y>
+              <width>58</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);
+font-size:14px</string>
+            </property>
+            <property name="text">
+             <string>时段</string>
+            </property>
+           </widget>
+           <widget class="QComboBox" name="comboBox">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>50</y>
+              <width>103</width>
+              <height>32</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color:#ddd</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>BTCUSDT</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>ETHUSDT</string>
+             </property>
+            </item>
+           </widget>
+           <widget class="QComboBox" name="comboBox_2">
+            <property name="geometry">
+             <rect>
+              <x>120</x>
+              <y>50</y>
+              <width>70</width>
+              <height>32</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color:#ddd</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>5分钟</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>15分钟</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>30分钟</string>
+             </property>
+            </item>
+           </widget>
+           <widget class="QComboBox" name="comboBox_3">
+            <property name="geometry">
+             <rect>
+              <x>200</x>
+              <y>50</y>
+              <width>80</width>
+              <height>32</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color:#ddd</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>MOVE-AVERAGE</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>ATR-TRADE</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>QQE-TRADE</string>
+             </property>
+            </item>
+           </widget>
+           <widget class="QLabel" name="label_10">
+            <property name="geometry">
+             <rect>
+              <x>200</x>
+              <y>20</y>
+              <width>58</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);
+font-size:14px</string>
+            </property>
+            <property name="text">
+             <string>策略模式</string>
+            </property>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="widget_6" native="true">
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>80</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color:#ddd</string>
+              </property>
+              <property name="title">
+               <string>交易信息</string>
+              </property>
+              <widget class="QPushButton" name="autobutton_2">
+               <property name="geometry">
+                <rect>
+                 <x>30</x>
+                 <y>30</y>
+                 <width>100</width>
+                 <height>41</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color:#666;
+background-color: rgb(255, 164, 156);</string>
+               </property>
+               <property name="text">
+                <string>现价做多</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="autobutton_3">
+               <property name="geometry">
+                <rect>
+                 <x>150</x>
+                 <y>90</y>
+                 <width>100</width>
+                 <height>41</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color:#666;
+background-color: rgb(255, 164, 156);</string>
+               </property>
+               <property name="text">
+                <string>现价平空</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="autobutton_4">
+               <property name="geometry">
+                <rect>
+                 <x>30</x>
+                 <y>90</y>
+                 <width>100</width>
+                 <height>41</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color:#666;
+background-color: rgb(255, 164, 156);</string>
+               </property>
+               <property name="text">
+                <string>现价平多</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="autobutton_5">
+               <property name="geometry">
+                <rect>
+                 <x>150</x>
+                 <y>30</y>
+                 <width>100</width>
+                 <height>41</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color:#666;
+background-color: rgb(255, 164, 156);</string>
+               </property>
+               <property name="text">
+                <string>现价做空</string>
+               </property>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="widget_7" native="true">
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <widget class="QGroupBox" name="groupBox_2">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>257</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color:#ddd</string>
+              </property>
+              <property name="title">
+               <string>策略参数</string>
+              </property>
+              <widget class="QLabel" name="label_16">
+               <property name="geometry">
+                <rect>
+                 <x>20</x>
+                 <y>40</y>
+                 <width>58</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>止损比例</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_17">
+               <property name="geometry">
+                <rect>
+                 <x>20</x>
+                 <y>70</y>
+                 <width>71</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>开单数量BTC</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="autocost">
+               <property name="geometry">
+                <rect>
+                 <x>80</x>
+                 <y>38</y>
+                 <width>41</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border:none;
+border-bottom:solid 1px #ddd</string>
+               </property>
+               <property name="text">
+                <string>1</string>
+               </property>
+               <property name="placeholderText">
+                <string>自动下单的最大张数</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="rate">
+               <property name="geometry">
+                <rect>
+                 <x>91</x>
+                 <y>67</y>
+                 <width>41</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border:none;
+border-bottom:solid 1px #ddd</string>
+               </property>
+               <property name="text">
+                <string>1.0</string>
+               </property>
+               <property name="placeholderText">
+                <string>风险控制百分比</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="autobutton">
+               <property name="geometry">
+                <rect>
+                 <x>80</x>
+                 <y>181</y>
+                 <width>100</width>
+                 <height>41</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color:#666;
+background-color: rgb(255, 164, 156);</string>
+               </property>
+               <property name="text">
+                <string>开始交易</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_2">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>220</y>
+                 <width>251</width>
+                 <height>31</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+              <widget class="QRadioButton" name="radioButton">
+               <property name="geometry">
+                <rect>
+                 <x>20</x>
+                 <y>95</y>
+                 <width>81</width>
+                 <height>20</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>分批止盈</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+              <widget class="QRadioButton" name="radioButton_2">
+               <property name="geometry">
+                <rect>
+                 <x>110</x>
+                 <y>95</y>
+                 <width>91</width>
+                 <height>20</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>手续费止盈</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="lineEdit">
+               <property name="geometry">
+                <rect>
+                 <x>100</x>
+                 <y>150</y>
+                 <width>113</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>3</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_11">
+               <property name="geometry">
+                <rect>
+                 <x>30</x>
+                 <y>150</y>
+                 <width>58</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>移动参数</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_12">
+               <property name="geometry">
+                <rect>
+                 <x>30</x>
+                 <y>120</y>
+                 <width>58</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>ATR参数</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="lineEdit_2">
+               <property name="geometry">
+                <rect>
+                 <x>100</x>
+                 <y>120</y>
+                 <width>113</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>1</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_18">
+               <property name="geometry">
+                <rect>
+                 <x>110</x>
+                 <y>40</y>
+                 <width>58</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>止盈比例</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="autocost_2">
+               <property name="geometry">
+                <rect>
+                 <x>180</x>
+                 <y>38</y>
+                 <width>51</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border:none;
+border-bottom:solid 1px #ddd</string>
+               </property>
+               <property name="text">
+                <string>2</string>
+               </property>
+               <property name="placeholderText">
+                <string>自动下单的最大张数</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_19">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>70</y>
+                 <width>58</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>止盈点位</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="autocost_3">
+               <property name="geometry">
+                <rect>
+                 <x>176</x>
+                 <y>67</y>
+                 <width>51</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border:none;
+border-bottom:solid 1px #ddd</string>
+               </property>
+               <property name="text">
+                <string>35</string>
+               </property>
+               <property name="placeholderText">
+                <string>自动下单的最大张数</string>
+               </property>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="widget_8" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <item>
+             <widget class="QGroupBox" name="groupBox_3">
+              <property name="styleSheet">
+               <string notr="true">color:#ddd</string>
+              </property>
+              <property name="title">
+               <string>系统日志</string>
+              </property>
+              <widget class="QTextEdit" name="loglist">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>20</y>
+                 <width>271</width>
+                 <height>341</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>341</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border:none</string>
+               </property>
+               <property name="html">
+                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'.AppleSystemUIFont'; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="markdown" stdset="0">
+                <string/>
+               </property>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
