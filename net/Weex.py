@@ -39,13 +39,13 @@ class Weex:
 
     info = {}
 
-    RATE = 5  ##开仓比例
+    RATE = 0.1  ##开仓比例
 
     balance = 0  ##账户余额
 
-    LOSS_RATE = 2  ##止损倍数
+    LOSS_RATE = 1  ##止损倍数
 
-    POINT = 35  ##默认盈亏点位
+    POINT = 30  ##默认盈亏点位
 
     SYMBOL = "BTC"
 
@@ -67,7 +67,7 @@ class Weex:
 
     def initlog(self):
         lp = config.time2date(time.time() * 1000)
-        self.logger = config.logger_config(log_path="./log/log-%s.txt" % (str(lp)), logging_name='')
+        self.logger = config.logger_config(log_path="./log-%s.txt" % (str(lp)), logging_name='')
         self.logger.info("日志文件初始化成功")
 
     def setLossRate(self, value):
@@ -218,9 +218,9 @@ class Weex:
                 data['presetStopLossPrice'] = str(int(loss))
                 data['presetTakeProfitPrice'] = str(int(win))
             else:
-                lw = price * self.RATE / 125
+                lw = price / self.RATE / 125
                 data['presetStopLossPrice'] = str(int(price - lw))
-                data['presetTakeProfitPrice'] = str(int(price + lw))
+                data['presetTakeProfitPrice'] = str(int(price + (lw * 2)))
             self.logger.info("做多参数 buyLong：%s" % str(data))
             response = self.session.post(api, headers=self.headers, json=data)
             if ptype != 0:
@@ -258,7 +258,7 @@ class Weex:
     ##开空
     def buyShort(self, price, ptype):
         try:
-            api = self.baseApi + "v1/mcp/order/openContract"
+            api = self.baseApi + "/v1/mcp/order/openContract"
             data = {
                 "businessLine": 10,
                 "businessSource": 10,
@@ -284,7 +284,7 @@ class Weex:
             else:
                 lw = price / self.RATE / 125
                 data['presetStopLossPrice'] = str(int(price + lw))
-                data['presetTakeProfitPrice'] = str(int(price - lw))
+                data['presetTakeProfitPrice'] = str(int(price - (lw * 2)))
             self.logger.info("做空参数：%s" % str(data))
             response = self.session.post(api, headers=self.headers, json=data)
             if ptype != 0:
@@ -330,6 +330,55 @@ class Weex:
                 "businessSource": 10,
                 "cancelOrder": True,
                 "delegateCount": str(self.RATE),
+                "delegateType": 3,
+                "enterPointSource": 1,
+                "languageType": 1,
+                "orderType": 1,
+                "secondBusinessLine": "N/A",
+                "symbolId": "BTCUSDT_UMCBL",
+                "timeInForceValue": 0,
+                "tokenId": "USDT"
+            }
+            response = self.session.post(api, headers=self.headers, json=data)
+            self.logger.info("平多：%s" % (str(response.json())))
+            return response.json()
+        except:
+            return False
+
+        ##空单的平仓
+    def pshortByamount(self,amount):
+        try:
+            api = self.baseApi + "/v1/mcp/order/closeContract"
+            data = {
+                "businessLine": 10,
+                "businessSource": 10,
+                "cancelOrder": True,
+                "delegateCount": str(amount),
+                "delegateType": 4,
+                "enterPointSource": 1,
+                "languageType": 1,
+                "orderType": 1,
+                "secondBusinessLine": "N/A",
+                "symbolId": "BTCUSDT_UMCBL",
+                "timeInForceValue": 0,
+                "tokenId": "USDT"
+            }
+            response = self.session.post(api, headers=self.headers, json=data)
+            self.logger.info("平空：%s" % (str(response.json())))
+            return response.json()
+        except Exception as e:
+            print(e)
+            return False
+
+    ##多单的平仓
+    def plongByamount(self,amount):
+        try:
+            api = self.baseApi + "/v1/mcp/order/closeContract"
+            data = {
+                "businessLine": 10,
+                "businessSource": 10,
+                "cancelOrder": True,
+                "delegateCount": str(amount),
                 "delegateType": 3,
                 "enterPointSource": 1,
                 "languageType": 1,

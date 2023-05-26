@@ -221,6 +221,7 @@ class BitgetWsClient:
         self.build()
         for channel in self.__all_suribe:
             self.subscribe([channel])
+        #self.__error_listener("reconnect")
         pass
 
     def __close(self):

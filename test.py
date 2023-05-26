@@ -35,6 +35,7 @@ import numpy as np
 import requests
 
 from net import config
+import xlwt
 
 
 def cleanNoneValue(d) -> dict:
@@ -58,26 +59,106 @@ def _prepare_params(params, special=False):
 
 def getHistory():
     history = []
-    endtime1 = time.time() * 1000
-    start1 = endtime1 - (5 * 60 * 1000 * 1000)
-    url1 = "https://api.bitget.com/api/mix/v1/market/candles?symbol=BTCUSDT_UMCBL&granularity=5m&startTime=%d&endTime=%d&limit=1000" % (
-    start1, endtime1)
-    response1 = requests.get(url1, proxies=config.PROXY)
-    result1 = response1.json()
-
-    endtime2 = start1
-    start2 = endtime2 - (5 * 60 * 500 * 1000)
-    url2 = "https://api.bitget.com/api/mix/v1/market/candles?symbol=BTCUSDT_UMCBL&granularity=5m&startTime=%d&endTime=%d&limit=1000" % (
-        start2, endtime2)
-    response2 = requests.get(url2, proxies=config.PROXY)
-    result2 = response2.json()
-    result2.extend(result1)
-    history = result2
-    print(len(history))
+    # 连续合约K线数据
+    url = "https://fapi.binance.com/fapi/v1/continuousKlines"
+    params = {
+        "pair": 'BTCUSDT',
+        "contractType": "PERPETUAL",
+        "interval": "1m",
+        "incomeType": "REALIZED_PNL",
+        "limit": 1500
+    }
+    now = datetime.datetime.now()
+    params['endTime'] = int(now.timestamp() * 1000)
+    params['startTime'] = params['endTime'] - (1 * 60 * 1500) * 1000
+    string = _prepare_params(params=params)
+    signature = hmac.new(config.api_secret.encode("utf-8"), string.encode("utf-8"), hashlib.sha256).hexdigest()
+    params["signature"] = signature
+    headers = {"X-MBX-APIKEY": config.api_key}
+    response = requests.get(url, headers=headers, params=params, proxies=config.PROXY)
     # 解析返回结果
-    print(config.time2date(history[0][0]))
-    print(config.time2date(history[-1][0]))
-    return history
+    try:
+        # print(config.time2date(params['startTime']))
+        # print(config.time2date(params['endTime']))
+        # print(params)
+        result = response.json()
+        # print(config.time2date(result[0][0]))
+        # print(config.time2date(result[-1][0]))
+        history.extend(response.json())
+        response.close()
+
+        s = params['startTime']
+        params['startTime'] = int(s - (1 * 60 * 1500) * 1000)
+        params['endTime'] = int(s)
+        string = _prepare_params(params=params)
+        signature = hmac.new(config.api_secret.encode("utf-8"), string.encode("utf-8"), hashlib.sha256).hexdigest()
+        params["signature"] = signature
+        headers = {"X-MBX-APIKEY": config.api_key}
+        response = requests.get(url, headers=headers, params=params, proxies=config.PROXY)
+
+        r2 = response.json()
+        r2.extend(history)
+
+
+        s = params['startTime']
+        params['startTime'] = int(s - (1 * 60 * 1500) * 1000)
+        params['endTime'] = int(s)
+        string = _prepare_params(params=params)
+        signature = hmac.new(config.api_secret.encode("utf-8"), string.encode("utf-8"), hashlib.sha256).hexdigest()
+        params["signature"] = signature
+        headers = {"X-MBX-APIKEY": config.api_key}
+        response = requests.get(url, headers=headers, params=params, proxies=config.PROXY)
+        # print(config.time2date(params['startTime']))
+        # print(config.time2date(params['endTime']))
+        # print(params)
+        # print(config.time2date(response.json()[0][0]))
+        # print(config.time2date(response.json()[-1][0]))
+        temp = response.json()
+        temp.extend(r2)
+
+        s = params['startTime']
+        params['startTime'] = int(s - (1 * 60 * 1500) * 1000)
+        params['endTime'] = int(s)
+        string = _prepare_params(params=params)
+        signature = hmac.new(config.api_secret.encode("utf-8"), string.encode("utf-8"), hashlib.sha256).hexdigest()
+        params["signature"] = signature
+        headers = {"X-MBX-APIKEY": config.api_key}
+        response = requests.get(url, headers=headers, params=params, proxies=config.PROXY)
+
+        r3 = response.json()
+        r3.extend(temp)
+
+        s = params['startTime']
+        params['startTime'] = int(s - (1 * 60 * 1500) * 1000)
+        params['endTime'] = int(s)
+        string = _prepare_params(params=params)
+        signature = hmac.new(config.api_secret.encode("utf-8"), string.encode("utf-8"), hashlib.sha256).hexdigest()
+        params["signature"] = signature
+        headers = {"X-MBX-APIKEY": config.api_key}
+        response = requests.get(url, headers=headers, params=params, proxies=config.PROXY)
+
+        r4 = response.json()
+        r4.extend(r3)
+
+        s = params['startTime']
+        params['startTime'] = int(s - (1 * 60 * 1500) * 1000)
+        params['endTime'] = int(s)
+        string = _prepare_params(params=params)
+        signature = hmac.new(config.api_secret.encode("utf-8"), string.encode("utf-8"), hashlib.sha256).hexdigest()
+        params["signature"] = signature
+        headers = {"X-MBX-APIKEY": config.api_key}
+        response = requests.get(url, headers=headers, params=params, proxies=config.PROXY)
+
+        r5 = response.json()
+        r5.extend(r4)
+
+        return r5
+
+    except Exception as e:
+        print(e)
+        return False
+    finally:
+        response.close()
 
 
 def calculate_atr(data, periods, multiplier, change_atr=True):
@@ -118,7 +199,7 @@ def calculate_atr(data, periods, multiplier, change_atr=True):
     return data
 
 
-if __name__ == "__mail__":
+if __name__ == "__main__":
     kline = getHistory()
     print(config.time2date(kline[0][0]))
     print(config.time2date(kline[-1][0]))

@@ -1,3 +1,6 @@
+import datetime
+import time
+
 import pandas as pd
 import ta
 
@@ -45,7 +48,7 @@ def relative_strength(self, n=5):
 import pandas as pd
 import numpy as np
 
-def calculate_indicators_and_signals(data, RSI_Period=14, SF=5, QQE=4.238):
+def calculate_indicators_and_signals(data, RSI_Period=4, SF=4, QQE=4.238,ATR_Period=5):
     # Calculate difference
     delta = data['close'].diff()
 
@@ -56,6 +59,14 @@ def calculate_indicators_and_signals(data, RSI_Period=14, SF=5, QQE=4.238):
     avg_loss = loss.rolling(window=RSI_Period, min_periods=RSI_Period).mean()
     rs = avg_gain / avg_loss
     data['RSI'] = 100 - (100 / (1 + rs))
+
+    # ATR Calculation
+    high_low = data['high'] - data['low']
+    high_close = np.abs(data['high'] - data['close'].shift())
+    low_close = np.abs(data['low'] - data['close'].shift())
+    ranges = pd.concat([high_low, high_close, low_close], axis=1)
+    true_range = np.max(ranges, axis=1)
+    data['ATR'] = true_range.rolling(ATR_Period).mean()
 
     # EMA Calculation
     def ema(series, span):
@@ -75,9 +86,14 @@ def calculate_indicators_and_signals(data, RSI_Period=14, SF=5, QQE=4.238):
     data['QQExshort'] = data['QQExshort'] * (data['QQExshort'].shift(1) == 0)
 
     # Calculate signals
-    data['buy_signal'] = np.where((data['FastAtrRsiTL'] < data['RsiMa']) & (data['FastAtrRsiTL'].shift(1) >= data['RsiMa'].shift(1)), 1, 0)
-    data['sell_signal'] = np.where((data['FastAtrRsiTL'] > data['RsiMa']) & (data['FastAtrRsiTL'].shift(1) <= data['RsiMa'].shift(1)), 1, 0)
+    threshold = data['ATR'].mean() * 1
 
+    data['buy_signal'] = np.where(
+        (data['FastAtrRsiTL'] < data['RsiMa']) & (data['FastAtrRsiTL'].shift(1) >= data['RsiMa'].shift(1)) & (
+                data['ATR'] > threshold), 1, 0)
+    data['sell_signal'] = np.where(
+        (data['FastAtrRsiTL'] > data['RsiMa']) & (data['FastAtrRsiTL'].shift(1) <= data['RsiMa'].shift(1)) & (
+                data['ATR'] > threshold), 1, 0)
     return data
 
 
@@ -85,12 +101,11 @@ def calculate_indicators_and_signals(data, RSI_Period=14, SF=5, QQE=4.238):
 ###
 ###
 
-history = test.getHistory()
-
+data = test.getHistory()
 
 timestamp,open, high, low, close, volume = [],[],[],[],[],[]
 
-for item in history:
+for item in data:
     timestamp.append(item[0])
     open.append(float(item[1]))
     high.append(float(item[2]))
@@ -101,18 +116,119 @@ for item in history:
 stock_data = pd.DataFrame(
     {"timestamp": timestamp, "open": open, "high": high, "low": low, "close": close, "volume": volume})
 
-singal = calculate_indicators_and_signals(stock_data, 5, 1, 4.238)
-print(singal)
-for i,v in enumerate(history):
-    if singal['sell_signal'][i] == 1:
-        print(f"在第 {i} 个时刻有一个做空信号。")
-        print(singal['sell_signal'][i])
-        history[i][1] = config.time2date(history[i][0])
-        print(history[i])
-    if singal['buy_signal'][i] == 1:
-        print(f"在第 {i} 个时刻有一个做多信号。")
-        print(singal['buy_signal'][i])
-        history[i][1] = config.time2date(history[i][0])
-        print(history[i])
-print(config.time2date(history[0][0]))
-print(config.time2date(history[-1][0]))
+result = calculate_indicators_and_signals(stock_data, 5, 5, 4.238,5)
+amount = 0
+sindex = 0
+bindex = 0
+cont = 0
+win = 0
+loss = 0
+
+
+amount2 = 0
+
+day = 2
+
+flag = 0
+
+for i in range(0,len(data)):
+    if result['sell_signal'][i] == True and int(data[i][0]) / 1000 + (86400 * day) > int(time.time()):
+        current = datetime.datetime.fromtimestamp(int(data[i][0])/1000)
+        scurrent = datetime.datetime.fromtimestamp(int(data[sindex][0])/1000)
+        # if sindex > 0 and flag == 1 and abs(current.minute - scurrent.minute) <= 10:
+        #     continue
+        # if bindex > 0:
+        #     btime = datetime.datetime.fromtimestamp(int(data[bindex][0])/1000)
+        #     if abs(current.minute - btime.minute) < 3:
+        #         continue
+
+        cont += 1
+        shortSign = {
+            "time": config.time2date(data[i][0]),
+            "timestamp": data[i][0],
+            "map": data[i][4],
+            "sign": True,
+            "per": "short"
+        }
+        sindex = i
+        max = 0
+        if bindex > 0 and int(shortSign['timestamp']) / 1000 + (86400 * day) > int(time.time()):
+
+            for ii in range(bindex,i):
+                if float(data[ii][2]) > max:
+                    max = float(data[ii][2])
+            if max - float(data[bindex][4]) >= 30:
+                amount += 30
+                win+=30
+            else:
+                if float(float(data[i][4]) - float(data[bindex][4])) <= -30:
+                    amount -= 30
+                    loss -= 30
+                    amount2 -= 30
+                else:
+                    amount += float(float(data[i][4]) - float(data[bindex][4]))
+                    loss += float(float(data[i][4]) - float(data[bindex][4]))
+                    amount2 += float(float(data[i][4]) - float(data[bindex][4]))
+
+            if float(float(data[i][4]) - float(data[bindex][4])) <= -30:
+                amount2 += -30
+            else:
+                amount2 += float(float(data[i][4]) - float(data[bindex][4]))
+
+
+        print("有一个做空信号")
+        print("与上一个信号的差值：%f 最大差值：%f" % (float(float(data[i][4]) - float(data[bindex][4])),(max - float(data[bindex][4]))))
+        print("做多期间最高价格： %f 做多价格：%s " % (max,data[bindex][4]))
+        print(shortSign)
+        print("\n")
+    if result['buy_signal'][i] == True and int(data[i][0]) / 1000 + (86400 * day) > int(time.time()):
+        current = datetime.datetime.fromtimestamp(int(data[i][0])/1000)
+        bcurrent = datetime.datetime.fromtimestamp(int(data[bindex][0])/1000)
+        # if bindex > 0 and flag == 1 and abs(current.minute - bcurrent.minute) <= 5:
+        #     continue
+        # if sindex > 0:
+        #     stime = datetime.datetime.fromtimestamp(int(data[sindex][0])/1000)
+        #     if abs(current.minute - stime.minute < 3):
+        #         continue
+        cont += 1
+        longSign = {
+            "time": config.time2date(data[i][0]),
+            "timestamp": data[i][0],
+            "map": data[i][4],
+            "sign": True,
+            "per": "long",
+        }
+        bindex = i
+        maxs = float(data[i][3])
+        if sindex > 0 and int(longSign['timestamp']) / 1000 + (86400 * day) > int(time.time()):
+            for ii in range(sindex, i):
+                if float(data[ii][3]) < maxs:
+                    maxs = float(data[ii][3])
+            if (float(data[sindex][4]) - maxs) >= 30:
+                amount += 30
+                win += 30
+            else:
+                if float(float(data[sindex][4]) - float(data[i][4])) <= -30:
+                    amount -= 30
+                    loss -= 30
+                else:
+                    amount += float(float(data[sindex][4]) - float(data[i][4]))
+                    loss += float(float(data[sindex][4]) - float(data[i][4]))
+            if float(float(data[sindex][4]) - float(data[i][4])) <= -30:
+                amount2 += -30
+            else:
+                amount2 +=float(float(data[sindex][4]) - float(data[i][4]))
+
+        print("有一个做多信号")
+        print("与上一个信号的差值：%f 最大差值：%f" % (float(float(data[sindex][4]) - float(data[i][4])),(float(data[sindex][4]) - maxs)))
+        print("做空期间最高价格： %f 做多价格：%s " % (maxs,data[bindex][4]))
+        print(longSign)
+        print("\n")
+
+print("固定止盈总共赚：%f"% float(amount))
+print("做单数量：%d" % cont)
+print("固定止盈 : %f 损单 %f " % (float(win),float(loss)))
+print("自然止盈:%f" % float(amount2))
+print(len(data))
+print(config.time2date(data[0][0]))
+print(config.time2date(data[-1][0]))

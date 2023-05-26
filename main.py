@@ -74,6 +74,12 @@ class Widget(QWidget):
 
     CANCEL_TIME = 0
 
+    OPEN_PRICE = 0
+
+    ORDER_AMOUNT = 0
+    ###分批止盈数据记录
+    PAMOUNT = 0
+
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -190,6 +196,7 @@ class Widget(QWidget):
 
     def setAuto(self, val):
         try:
+            self.ORDER_AMOUNT = float(val)
             for i in self.balance.session:
                 i.setLossRate(val)
         except:
@@ -273,38 +280,48 @@ class Widget(QWidget):
                 return
 
             ###检查当前信号方向和持仓是否匹配，若不匹配则平掉反方向的订单
-            if data['long']['timestamp'] > data['short']['timestamp']:
-                ##多单信号，则平掉空单，给60秒确认时间
-                if self.ON_SHORT and self.CANCEL_TIME >= 60:
-                    for hand in self.balance.session:
-                        threading.Thread(target=hand.pshort).start()
-                        self.CANCEL_TIME = 0
-                        self.ON_SHORT = False
-                        config.log(self.ui.loglist,"持仓方向与信号不符合，自动平掉空单")
-                else:
-                    if self.ON_SHORT:
-                        print("持仓方向不一致，正在取消：%s" % (str(self.CANCEL_TIME)))
-                        self.CANCEL_TIME += 1
+            if self.PROFIT_TYPE == 0:
+                confirmSec = 60
             else:
-                if self.ON_LONG and self.CANCEL_TIME >= 60:
-                    for hand in self.balance.session:
-                        threading.Thread(target=hand.plong).start()
-                        self.CANCEL_TIME = 0
-                        self.ON_LONG = False
-                        config.log(self.ui.loglist, "持仓方向与信号不符合，自动平掉多单")
-                else:
-                    if self.ON_LONG:
-                        print("持仓方向不一致，正在取消：%s" % (str(self.CANCEL_TIME)))
-                        self.CANCEL_TIME += 1
+                confirmSec = 30
+
+
+            nowtime = datetime.datetime.fromtimestamp(int(time.time()))
+            # if data['long']['timestamp'] > data['short']['timestamp']:
+            #     signTime = datetime.datetime.fromtimestamp(int(data['long']['timestamp'])/1000)
+            #     ##多单信号，则平掉空单，给confirmSec秒确认时间
+            #     if signTime.hour == nowtime.hour and signTime.minute == nowtime.minute and self.ON_SHORT:
+            #         for hand in self.balance.session:
+            #             threading.Thread(target=hand.pshort).start()
+            #             self.CANCEL_TIME = 0
+            #             self.ON_SHORT = False
+            #             config.log(self.ui.loglist, "持仓方向与信号不符合，自动平掉空单")
+            #     else:
+            #         if self.ON_SHORT:
+            #             print("持仓方向不一致，正在取消：%s" % (str(self.CANCEL_TIME)))
+            #             self.CANCEL_TIME += 1
+            # else:
+            #     signTime = datetime.datetime.fromtimestamp(int(data['short']['timestamp'])/1000)
+            #     if signTime.hour == nowtime.hour and signTime.minute == nowtime.minute and self.ON_LONG:
+            #         for hand in self.balance.session:
+            #             threading.Thread(target=hand.plong).start()
+            #             self.CANCEL_TIME = 0
+            #             self.ON_LONG = False
+            #             config.log(self.ui.loglist, "持仓方向与信号不符合，自动平掉多单")
+            #     else:
+            #         if self.ON_LONG:
+            #             print("持仓方向不一致，正在取消：%s" % (str(self.CANCEL_TIME)))
+            #             self.CANCEL_TIME += 1
 
 
             ###信号相差时间不能低于3分钟 ， 在信号确认里面也是
-            if abs(data['short']['timestamp'] - data['long']['timestamp']) / 1000 <= 250:
-                print("双信号时间过于接近: %d" % (
-                        (int(data['long']['timestamp']) - int(data['short']['timestamp'])) / 1000))
-                self.ON_LONG_SIGN_NUM = 0
-                self.ON_SHORT_SIGN_NUM = 0
-                return
+            # if abs(data['short']['timestamp'] - data['long']['timestamp']) / 1000 <= 250:
+            #     print("双信号时间过于接近: %d" % (
+            #             (int(data['long']['timestamp']) - int(data['short']['timestamp'])) / 1000))
+            #     self.ON_LONG_SIGN_NUM = 0
+            #     self.ON_SHORT_SIGN_NUM = 0
+            #     return
+
             if data['short']['timestamp'] < data['long']['timestamp']:
                 # 开多
                 print("多单进入流程1")
@@ -314,25 +331,23 @@ class Widget(QWidget):
                         # self.ON_LONG = False
                         self.ON_LONG = False
                     return
-                if config.equalDate(data['long']['timestamp'] / 1000, int(time.time())):
+                signTime = datetime.datetime.fromtimestamp(int(data['long']['timestamp'])/1000)
+                if signTime.hour == nowtime.hour and signTime.minute == nowtime.minute and signTime.second > 50 and not self.ON_LONG:
                     print("多单进入流程2")
-                    if self.ON_LONG_SIGN_NUM < 50:
-                        print("等待多单信号确认：%d" % self.ON_LONG_SIGN_NUM)
-                        self.ON_LONG_SIGN_NUM += 1
-                        return
-                    if time.time() - self.ON_LONG_TIME >= 300:
-                        print("多单进入下单流程")
-                        for i in self.balance.session:
-                            threading.Thread(target=i.buyLong, args=(data['long']['newprice'], self.PROFIT_TYPE,)).start()
-                            # res = self.balance.weex.buyLong(self.FORM['AUTO'], data['long']['newprice'], self.PROFIT_TYPE)
-                            config.log(self.ui.loglist, "自动做多 价格：%s" % (
-                                str(str(data['long']['newprice']))))
+                    self.ON_LONG_TIME = time.time()
+                    self.ON_LONG = True  ##改变当前方向的持仓状态
+                    self.ON_SHORT = False  ##改变对手单的持仓状态，使其可以开空单
+                    self.ON_LONG_SIGN_NUM = 0
+                    self.play2()
+                    print("多单进入下单流程")
+                    self.OPEN_PRICE = float(data['long']['newprice'])
+                    for i in self.balance.session:
+                        threading.Thread(target=i.buyLong, args=(data['long']['newprice'], self.PROFIT_TYPE,)).start()
+                        # res = self.balance.weex.buyLong(self.FORM['AUTO'], data['long']['newprice'], self.PROFIT_TYPE)
+                        config.log(self.ui.loglist, "自动做多 价格：%s" % (
+                            str(str(data['long']['newprice']))))
 
-                        self.ON_LONG_TIME = time.time()
-                        self.ON_LONG = True  ##改变当前方向的持仓状态
-                        self.ON_SHORT = False  ##改变对手单的持仓状态，使其可以开空单
-                        self.ON_LONG_SIGN_NUM = 0
-                        self.play2()
+
                 else:
                     ###如果时间不相等，或者在持仓的状态中 让其30 分钟后可以开同方向的单子
                     if time.time() - self.ON_LONG_TIME > 1800:
@@ -346,24 +361,23 @@ class Widget(QWidget):
                         self.ON_SHORT = False
                     return
                 ###已持仓的状态下，信号时间太接近不下单
-                if config.equalDate(data['short']['timestamp'] / 1000, int(time.time())):
+                signTime = datetime.datetime.fromtimestamp(int(data['short']['timestamp'])/1000)
+                if signTime.hour == nowtime.hour and signTime.minute == nowtime.minute and signTime.second > 50 and not self.ON_SHORT:
                     print("进入空单流程1")
-                    if self.ON_SHORT_SIGN_NUM < 50:
-                        print("等待空信号确认 ：%d" % self.ON_SHORT_SIGN_NUM)
-                        self.ON_SHORT_SIGN_NUM += 1
-                        return
-                    if time.time() - self.ON_SHORT_TIME >= 300:
-                        print("进入空单流程2")
-                        for i in self.balance.session:
-                            threading.Thread(target=i.buyShort, args=(data['short']['newprice'], self.PROFIT_TYPE,)).start()
-                            # res = self.balance.weex.buyShort(self.FORM['AUTO'], data['short']['newprice'], self.PROFIT_TYPE)
-                            config.log(self.ui.loglist, "自动做空-价格：%s" % (
-                                 str(data['short']['newprice'])))
-                        self.ON_SHORT_TIME = time.time()
-                        self.ON_SHORT = True
-                        self.ON_LONG = False
-                        self.ON_SHORT_SIGN_NUM = 0
-                        self.play2()
+                    self.ON_SHORT_TIME = time.time()
+                    self.ON_SHORT = True
+                    self.ON_LONG = False
+                    self.ON_SHORT_SIGN_NUM = 0
+                    self.play2()
+                    print("进入空单流程，信号确认准备下单")
+                    self.OPEN_PRICE = float(data['short']['newprice'])
+                    for i in self.balance.session:
+                        threading.Thread(target=i.buyShort, args=(data['short']['newprice'], self.PROFIT_TYPE,)).start()
+                        # res = self.balance.weex.buyShort(self.FORM['AUTO'], data['short']['newprice'], self.PROFIT_TYPE)
+                        config.log(self.ui.loglist, "自动做空-价格：%s" % (
+                            str(data['short']['newprice'])))
+
+
                 else:
                     ### 其他时间检查当前状态是否可开空单，或者超过30分钟自动可以开空
                     if time.time() - self.ON_SHORT_TIME > 1800:

@@ -46,7 +46,7 @@ def get_signals(src, per, mult):
 
 
 @config.debounce(1)
-def getSign(data, _per=1500, _mult=3):
+def getSign(data, _mult=2):
     # src = pd.Series([float(entry[4]) for entry in data])
     close = []
     timestamp = []
@@ -55,7 +55,7 @@ def getSign(data, _per=1500, _mult=3):
         timestamp.append(int(entry[0]))
     # src = pd.DataFrame({'close': [float(entry[4]) for entry in data], 'timestamp': [float(entry[0]) for entry in data]})
     src = pd.DataFrame({'close': close, 'timestamp': timestamp})
-    long_condition, short_condition = get_signals(src['close'], _per, _mult)
+    long_condition, short_condition = get_signals(src['close'], 7, _mult)
     short = []
     longSign = {}
     shortSign = {}

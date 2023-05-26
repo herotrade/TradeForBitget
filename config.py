@@ -24,6 +24,12 @@ def equalDate(d1,d2):
                  datetime1.day == datetime2.day and
                  datetime1.hour == datetime2.hour and
                  datetime1.minute == datetime2.minute)
+    if not are_equal:
+        are_equal = (datetime1.year == datetime2.year and
+                 datetime1.month == datetime2.month and
+                 datetime1.day == datetime2.day and
+                 datetime1.hour == datetime2.hour and
+                 datetime1.minute >= (datetime2.minute - 2))
     return are_equal
 
 

@@ -1,0 +1,28 @@
+2023-05-27 00:01:25,794 - root - INFO - 信号日志文件初始化成功
+2023-05-27 00:01:30,216 - websocket - INFO - Websocket connected
+2023-05-27 00:02:10,613 - root - INFO - 信号日志文件初始化成功
+2023-05-27 00:02:15,443 - websocket - INFO - Websocket connected
+2023-05-27 00:02:42,204 - root - INFO - 信号日志文件初始化成功
+2023-05-27 00:02:46,439 - websocket - INFO - Websocket connected
+2023-05-27 00:03:22,545 - root - INFO - 信号日志文件初始化成功
+2023-05-27 00:03:26,568 - websocket - INFO - Websocket connected
+2023-05-27 00:03:57,616 - root - INFO - 信号日志文件初始化成功
+2023-05-27 00:03:57,617 - root - INFO - 日志文件初始化成功
+2023-05-27 00:03:57,618 - root - INFO - cookie 信息已设置
+2023-05-27 00:05:16,476 - root - INFO - 信号日志文件初始化成功
+2023-05-27 00:05:16,477 - root - INFO - 日志文件初始化成功
+2023-05-27 00:05:16,477 - root - INFO - cookie 信息已设置
+2023-05-27 00:05:25,650 - root - INFO - {'businessLine': 10, 'professionalContractAssetsInfos': [{'accountId': '9367429231', 'available': '733.74197531', 'bonus': '0.00000000', 'btcEquity': '0.02741096', 'btcValuation': '0.02741096', 'businessLine': 10, 'businessLineDesc': 'USDT混合合约业务线', 'crossMaxAvailable': '733.74197531', 'equity': '733.74197531', 'locked': '0.00000000', 'maxTransferOut': '733.74197531', 'secondBusinessLine': 'N/A', 'settleTokenId': 'USDT', 'tokenDisplayName': 'USDT', 'tokenId': 'USDT', 'unrealizedTotalBTC': '0.00000000', 'unrealizedTotalUSDT': '0.00000000', 'usdtEquity': '733.74197531', 'usedBalance': '0.00000000'}], 'totalBtc': '0.02741096', 'totalUsdt': '733.74197531', 'unrealizedTotalBTC': '0', 'unrealizedTotalUSDT': '0'}
+2023-05-27 00:05:25,653 - root - INFO - 合约账户可用余额：733.74197531
+2023-05-27 00:06:10,110 - root - INFO - 信号日志文件初始化成功
+2023-05-27 00:06:10,110 - root - INFO - 日志文件初始化成功
+2023-05-27 00:06:10,111 - root - INFO - cookie 信息已设置
+2023-05-27 00:06:12,834 - root - INFO - {'businessLine': 10, 'professionalContractAssetsInfos': [{'accountId': '9367429231', 'available': '733.74197531', 'bonus': '0.00000000', 'btcEquity': '0.02740983', 'btcValuation': '0.02740983', 'businessLine': 10, 'businessLineDesc': 'USDT混合合约业务线', 'crossMaxAvailable': '733.74197531', 'equity': '733.74197531', 'locked': '0.00000000', 'maxTransferOut': '733.74197531', 'secondBusinessLine': 'N/A', 'settleTokenId': 'USDT', 'tokenDisplayName': 'USDT', 'tokenId': 'USDT', 'unrealizedTotalBTC': '0.00000000', 'unrealizedTotalUSDT': '0.00000000', 'usdtEquity': '733.74197531', 'usedBalance': '0.00000000'}], 'totalBtc': '0.02740983', 'totalUsdt': '733.74197531', 'unrealizedTotalBTC': '0', 'unrealizedTotalUSDT': '0'}
+2023-05-27 00:06:12,838 - root - INFO - 合约账户可用余额：733.74197531
+2023-05-27 00:06:53,376 - websocket - INFO - Websocket connected
+2023-05-27 00:07:25,514 - root - INFO - 信号日志文件初始化成功
+2023-05-27 00:07:25,514 - root - INFO - 日志文件初始化成功
+2023-05-27 00:07:25,514 - root - INFO - cookie 信息已设置
+2023-05-27 00:07:27,699 - root - INFO - {'businessLine': 10, 'professionalContractAssetsInfos': [{'accountId': '9367429231', 'available': '733.74197531', 'bonus': '0.00000000', 'btcEquity': '0.02740775', 'btcValuation': '0.02740775', 'businessLine': 10, 'businessLineDesc': 'USDT混合合约业务线', 'crossMaxAvailable': '733.74197531', 'equity': '733.74197531', 'locked': '0.00000000', 'maxTransferOut': '733.74197531', 'secondBusinessLine': 'N/A', 'settleTokenId': 'USDT', 'tokenDisplayName': 'USDT', 'tokenId': 'USDT', 'unrealizedTotalBTC': '0.00000000', 'unrealizedTotalUSDT': '0.00000000', 'usdtEquity': '733.74197531', 'usedBalance': '0.00000000'}], 'totalBtc': '0.02740775', 'totalUsdt': '733.74197531', 'unrealizedTotalBTC': '0', 'unrealizedTotalUSDT': '0'}
+2023-05-27 00:07:27,703 - root - INFO - 合约账户可用余额：733.74197531
+2023-05-27 00:09:07,233 - websocket - INFO - Websocket connected

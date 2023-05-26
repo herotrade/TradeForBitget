@@ -82,7 +82,7 @@ for i in params:
     low.append(float(i[3]))
     close.append(float(i[4]))
 pdata = pd.DataFrame({"high": high, "low": low, "close": close})
-result = calculate_atr(pdata, 5, 1, False)
+result = calculate_atr(pdata, 5, 1, True)
 long = {}
 short = {}
 for index, value in enumerate(result['trend']):

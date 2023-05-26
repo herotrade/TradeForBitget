@@ -1,10 +1,10 @@
 import hashlib
 import hmac
 import random
+import threading
 import time
 
 import requests
-from PySide6.QtCore import Signal, QThread, QTimer
 import websocket
 import json
 import ssl
@@ -15,10 +15,11 @@ import numpy as np
 from celue.RangeFilterBy5Min import getSign
 from celue.super import sGetSign
 from celue.qqesign import QQEgetSign
+from net.Weex import Weex
 from test import getHistory
 
-class Rsi(QThread):
-    signal = Signal(object)
+
+class Rsi():
     symbol = 'BTCUSDT'
     history = []
     url = "https://fapi.binance.com",
@@ -36,13 +37,42 @@ class Rsi(QThread):
 
     connecting = False
 
+    ON_SHORT = False
+    ON_LONG = False
+
+    ON_SHORT_TIME = time.time()
+    ON_LONG_TIME = time.time()
+
+    ON_SHORT_SIGN_NUM = 0
+    ON_LONG_SIGN_NUM = 0
+
+    ON_START = 0  ##是否启动自动交易
+
+    PROFIT_TYPE = 1
+    PROFIT_MULT = 1  ##手续费止盈倍数
+
+    DEFAULT_SIGN = 3  ##信号触发默认参数
+
+    SIGN_DATA = None  ##信号数据
+    NEW_PRICE = 0
+
+    CANCEL_TIME = 0
+
+    OPEN_PRICE = 0
+
+    ORDER_AMOUNT = 0
+    ###分批止盈数据记录
+    PAMOUNT = 0
+
+    session = []
+
     def __init__(self, _mult=3):
+        self.logger = None
         self.mult = _mult
         super().__init__()
         # self.timer = QTimer()
         # self.timer.timeout.connect(self.updateHistory)
         # self.timer.start(20000)
-
 
     def changeMode(self, e):
         self.mode = e
@@ -55,7 +85,7 @@ class Rsi(QThread):
         self.getHistory()
         self.onOpen(self.ws)
 
-    def changeATR(self,v):
+    def changeATR(self, v):
         self.atr_mult = float(v)
 
     def changeMult(self, value):
@@ -69,7 +99,6 @@ class Rsi(QThread):
             self.init = False
             print("最新历史数据")
             print(self.history[-1])
-
 
     def getHistory(self):
         result = getHistory()
@@ -174,7 +203,7 @@ class Rsi(QThread):
             lasttimestamp = datetime.datetime.fromtimestamp(int(self.history[-1][0]) / 1000)
             currenttime = datetime.datetime.fromtimestamp(times / 1000)
 
-            flag = 0 # 0更新 1新增
+            flag = 0  # 0更新 1新增
             if int(currenttime.minute) > int(lasttimestamp.minute):
                 flag = 1
                 self.wsH = price
@@ -210,13 +239,14 @@ class Rsi(QThread):
                     last = self.history[-1]
                     last[0] = times
                     self.history[-1] = last
-                    self.history.append([times,0,price,price,price])
+                    self.history.append([times, 0, price, price, price])
                     print("k线新增完成 数量  :%d" % len(self.history))
                     print("before first : %s " % str(config.time2date(self.history[0][0])))
                     print("before last : %s " % str(config.time2date(self.history[-1][0])))
 
                     print("最新三根k线价格情况")
-                    print("-2 hight：%f low：%f close：%f" % (self.history[-2][2],self.history[-2][3],self.history[-2][4]))
+                    print(
+                        "-2 hight：%f low：%f close：%f" % (self.history[-2][2], self.history[-2][3], self.history[-2][4]))
                     print(
                         "-3 hight：%f low：%f close：%f" % (self.history[-3][2], self.history[-3][3], self.history[-3][4]))
                     print(
@@ -226,7 +256,7 @@ class Rsi(QThread):
                         self.wsH = price
                     if price < self.wsL:
                         self.wsL = price
-                    self.history[-1] = [times,0,self.wsH,self.wsL,price]
+                    self.history[-1] = [times, 0, self.wsH, self.wsL, price]
 
             rsi = self.relative_strength()
 
@@ -234,19 +264,19 @@ class Rsi(QThread):
                 if self.mode == 1:
                     short, long = getSign(self.history, self.mult)
                 if self.mode == 2:
-                    short, long = sGetSign(self.history,self.atr_mult)
+                    short, long = sGetSign(self.history, self.atr_mult)
                     short['newprice'] = price
                     long['newprice'] = price
                 if self.mode == 3:
-                    short,long = QQEgetSign(self.history)
+                    short, long = QQEgetSign(self.history)
                     short['newprice'] = price
                     long['newprice'] = price
             except Exception as e:
-                #print(e)
+                # print(e)
                 short, long = False, False
 
             rd = {"rsi": rsi[-1], "short": short, "long": long}
-            self.signal.emit(rd)
+            self.order(rd)
             del short, long, rd, rsi
         except Exception as e:
             print(e)
@@ -341,6 +371,76 @@ class Rsi(QThread):
         return self.encoded_string(self.cleanNoneValue(params), special)
 
     def run(self) -> None:
+        self.initLog()
+        self.initWeex()
         self.getHistory()
         self.connectWs()
-        self.exec()
+
+    def initLog(self):
+        from net import config
+        lp = config.time2date(time.time() * 1000)
+        self.logger = config.logger_config(log_path="./signal.txt", logging_name='')
+        self.logger.info("信号日志文件初始化成功")
+
+    def initWeex(self):
+        weex = Weex()
+        self.session.append(weex)
+
+    def order(self, data):
+        if data['short']:
+            nowtime = datetime.datetime.fromtimestamp(int(time.time()))
+            if data['short']['timestamp'] < data['long']['timestamp']:
+                # 开多
+                if self.ON_LONG:
+                    print("已持有多单")
+                    if time.time() - self.ON_LONG_TIME > 1800:
+                        # self.ON_LONG = False
+                        self.ON_LONG = False
+                    return
+                signTime = datetime.datetime.fromtimestamp(int(data['long']['timestamp']) / 1000)
+                if signTime.hour == nowtime.hour and signTime.minute == nowtime.minute and signTime.second > 50 and not self.ON_LONG:
+                    self.logger.info("多单下单")
+                    self.ON_LONG_TIME = time.time()
+                    self.ON_LONG = True  ##改变当前方向的持仓状态
+                    self.ON_SHORT = False  ##改变对手单的持仓状态，使其可以开空单
+                    self.ON_LONG_SIGN_NUM = 0
+
+                    self.OPEN_PRICE = float(data['long']['newprice'])
+                    for i in self.session:
+                        threading.Thread(target=i.buyLong, args=(data['long']['newprice'], self.PROFIT_TYPE,)).start()
+                    self.logger.info("自动做多 价格：%s" % (
+                        str(str(data['long']['newprice']))))
+                else:
+                    ###如果时间不相等，或者在持仓的状态中 让其30 分钟后可以开同方向的单子
+                    if time.time() - self.ON_LONG_TIME > 1800:
+                        # self.ON_LONG = False
+                        self.ON_LONG_SIGN_NUM = 0
+            else:
+                if self.ON_SHORT:
+                    print("已持有空单")
+                    if time.time() - self.ON_SHORT_TIME > 1800:
+                        self.ON_SHORT = False
+                    return
+                ###已持仓的状态下，信号时间太接近不下单
+                signTime = datetime.datetime.fromtimestamp(int(data['short']['timestamp']) / 1000)
+                if signTime.hour == nowtime.hour and signTime.minute == nowtime.minute and signTime.second > 50 and not self.ON_SHORT:
+                    self.logger.info("空单下单")
+                    self.ON_SHORT_TIME = time.time()
+                    self.ON_SHORT = True
+                    self.ON_LONG = False
+                    self.ON_SHORT_SIGN_NUM = 0
+                    self.OPEN_PRICE = float(data['short']['newprice'])
+                    for i in self.session:
+                        threading.Thread(target=i.buyShort, args=(data['short']['newprice'], self.PROFIT_TYPE,)).start()
+                    self.logger.info("自动做空-价格：%s" % (
+                        str(data['short']['newprice'])))
+                else:
+                    ### 其他时间检查当前状态是否可开空单，或者超过30分钟自动可以开空
+                    if time.time() - self.ON_SHORT_TIME > 1800:
+                        # self.ON_SHORT = False
+                        self.ON_SHORT_SIGN_NUM = 0
+
+
+if __name__ == "__main__":
+    rsi = Rsi()
+    rsi.run()
